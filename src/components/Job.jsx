@@ -2,11 +2,17 @@ import { Row, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import {
+  ADD_TO_FAVOURITES,
+  DELETE_TO_FAVOURITES,
+  addToFavouritesAction,
+  removeToFavourites,
+} from "../redux/actions";
 
 const Job = ({ data }) => {
   // console.log(data);
   const [clicked, setClicked] = useState(false);
-  const favourites = useSelector((state) => state.favourites.content);
+
   const dispatch = useDispatch();
 
   return (
@@ -28,19 +34,13 @@ const Job = ({ data }) => {
           style={clicked ? { color: "gold" } : { color: "black" }}
           onClick={() => {
             setClicked(!clicked);
-            dispatch({
-              type: "ADD-TO-FAVOURITES",
-              payload: data,
-            });
+            dispatch(addToFavouritesAction(data));
           }}
         ></i>
         <i
           className="bi bi-trash ms-5 text-danger"
           onClick={() => {
-            dispatch({
-              type: "DELETE-TO-FAVOURITES",
-              payload: data,
-            });
+            dispatch(removeToFavourites(data));
           }}
         ></i>
       </Col>

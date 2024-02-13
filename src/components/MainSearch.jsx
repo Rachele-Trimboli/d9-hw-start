@@ -2,10 +2,18 @@ import { useState } from "react";
 import { Container, Row, Col, Form } from "react-bootstrap";
 import Job from "./Job";
 import Favourites from "./Favourites";
+import Button from "react-bootstrap/Button";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getJobCreation, searched } from "../redux/actions";
 
 const MainSearch = () => {
   const [query, setQuery] = useState("");
-  const [jobs, setJobs] = useState([]);
+  // const [jobs, setJobs] = useState([]);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const favourites = useSelector((state) => state.favourites.content);
+  const jobs = useSelector((state) => state.searched.searched);
 
   const baseEndpoint =
     "https://strive-benchmark.herokuapp.com/api/jobs?search=";
@@ -16,18 +24,20 @@ const MainSearch = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    dispatch(getJobCreation(query));
 
-    try {
-      const response = await fetch(baseEndpoint + query + "&limit=20");
-      if (response.ok) {
-        const { data } = await response.json();
-        setJobs(data);
-      } else {
-        alert("Error fetching results");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   const response = await fetch(baseEndpoint + query + "&limit=20");
+    //   if (response.ok) {
+    //     const { data } = await response.json();
+    //     setJobs(data);
+    //     dispatch(searched(data));
+    //   } else {
+    //     alert("Error fetching results");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -36,8 +46,14 @@ const MainSearch = () => {
         <Col xs={10} className="mx-auto my-3">
           <h1 className="display-1">Remote Jobs Search</h1>
         </Col>
-        <Col xs={2} className="text-end">
+        {/* <Col xs={2} className="text-end">
           <Favourites></Favourites>
+        </Col> */}
+        <Col xs={2}>
+          <Button variant="white" onClick={() => navigate("/favourites")}>
+            <i className="bi bi-star-fill text-warning"></i>
+            {favourites.length}
+          </Button>
         </Col>
       </Row>
       <Row>
